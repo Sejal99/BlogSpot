@@ -1,8 +1,10 @@
 
 import express from 'express';
-
+import mongoose from 'mongoose';
+import connectDb from './connection/connect';
 
 // Create an Express application
+connectDb()
 const app = express();
 
 
@@ -11,10 +13,13 @@ app.get('/', (req, res) => {
   res.send('Hello, this is your backend!');
 });
 
-// Set the port for the server
 const port = 8000;
+
 
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+
+
