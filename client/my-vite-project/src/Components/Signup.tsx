@@ -23,7 +23,7 @@ const Signup = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('User created successfully:', data.user);
+        console.log('User created successfully:', data);
         window.location.href = '/login';
       } else {
         const errorData = await response.json();

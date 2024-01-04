@@ -46,15 +46,17 @@ const userSchema= new mongoose.Schema<User,UserModel>({
 
 userSchema.pre<User>('save', function (next){
     const user= this;
-    console.log(user);
+   console.log(user);
     
     if(!user.isModified("password")) {return}
     const secret= randomBytes(16).toString()
     const hashedPassword = createHmac('sha256', secret).update(user.password).digest('hex');
-   // console.log(hashedPassword);
+   console.log(hashedPassword);
+   
     
     this.salt = secret
     this.password = hashedPassword
+    console.log('nnnnnn',this);
     next()
 })
 
@@ -66,11 +68,16 @@ userSchema.static('matchPassword', async function( email , password){
     }
     const secret= user.salt
     const hashedPassword= user.password
+    
     const hashingPassword= createHmac('sha256', secret).update(password).digest('hex');
+    console.log(hashedPassword);
+    console.log(hashingPassword);
+    
+    
     if(hashedPassword !== hashingPassword){
         return null
     }
-
+return {...user,password:undefined,salt:undefined}
 
 })
 
