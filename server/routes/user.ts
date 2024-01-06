@@ -49,6 +49,7 @@ console.log('ppppppp',token);
         }
 
     } catch (error) {
+  console.log(error);
   
     }
 });
