@@ -24,7 +24,7 @@ const Signin = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('User signedin successfully:', data);
-        window.location.href = '/';
+        window.location.href = '/home';
       } else {
         const errorData = await response.json();
         console.error('Error creating user:', errorData.error);
