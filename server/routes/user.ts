@@ -33,18 +33,27 @@ userRouter.post('/signup' , async (req, res)=> {
 userRouter.post('/signin', async (req, res) => {
     try {
         const { email, password } = req.body;
-        const fuser = await user.matchPassword(email,password); // Use the model to call the static method
-       // console.log(fuser);
-        
-        if (!fuser) {
+        const token = await user.matchPassword(email, password);
+console.log('ppppppp',token);
+
+        if (!token) {
             throw new Error('User not found or password does not match');
         }
 
-        res.status(200).json('user signed in' );
+        // Send the JSON response
+        res.status(200).json({ message: 'User signed in' });
+
+        // Check if the response has been sent before setting the cookie
+        if (!res.headersSent) {
+            res.cookie('token', token);
+        }
+
     } catch (error) {
-        res.status(403).json({ error});
+  
     }
 });
+
+   
 
 
 export default userRouter

@@ -1,6 +1,6 @@
 import mongoose, { Model,Document } from "mongoose";
 import { createHmac , randomBytes } from "crypto";
-
+import {createToken} from '../services/auth';
 
 interface User extends Document{ 
     fullName: string;
@@ -77,7 +77,8 @@ userSchema.static('matchPassword', async function( email , password){
     if(hashedPassword !== hashingPassword){
         return null
     }
-return {...user,password:undefined,salt:undefined}
+    const token=createToken(user)
+    return token;
 
 })
 
