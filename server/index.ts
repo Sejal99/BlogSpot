@@ -3,8 +3,10 @@ import express from 'express';
 import mongoose from 'mongoose';
 import connectDb from './connection/connect';
 import userRouter from './routes/user'
-
+import cookieParser from 'cookie-parser';
 import cors from 'cors'
+import { verifyJwt } from './middlewares/authentication';
+import blogRouter from './routes/blog';
 
 
 connectDb()
@@ -20,9 +22,12 @@ app.use(cors({
 }));
 
 app.use(express.json())
+app.use(cookieParser());
+// app.use(verifyJwt("token"));
+app.use(express.static('public')) 
+
 app.use('/user',userRouter)
-
-
+app.use('/blog',blogRouter)
 const port = 8000;
 
 
