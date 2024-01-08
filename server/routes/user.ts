@@ -43,10 +43,11 @@ console.log('ppppppp',token);
         // Send the JSON response
         res.status(200).json({ message: 'User signed in' });
 
-        // Check if the response has been sent before setting the cookie
-        if (!res.headersSent) {
+       
+        
             res.cookie('token', token);
-        }
+          
+        
 
     } catch (error) {
   console.log(error);
