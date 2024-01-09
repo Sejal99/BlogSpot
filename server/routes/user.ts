@@ -41,11 +41,12 @@ console.log('ppppppp',token);
         }
 
         // Send the JSON response
+        res.cookie('token', token);
         res.status(200).json({ message: 'User signed in' });
 
-       
+      
         
-            res.cookie('token', token);
+          
           
         
 

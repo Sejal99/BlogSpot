@@ -1,15 +1,17 @@
 import  { useState } from 'react';
-
+ import Cookies from 'js-cookie';
+ import { useNavigate } from 'react-router-dom';
 const Signin = () => {
- 
+  const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
   
 
-  const handleSignup = async () => {
+  const handleSignin = async () => {
      try {
       const response = await fetch('http://localhost:8000/user/signin', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -24,7 +26,13 @@ const Signin = () => {
       if (response.ok) {
         const data = await response.json();
         console.log('User signedin successfully:', data);
-        window.location.href = '/home';
+        const token = Cookies.get('token');
+        console.log('kkkkkkkkkkkkkkkkkkk',token);
+
+        if (token) {
+          navigate('/home');
+        }
+      
       } else {
         const errorData = await response.json();
         console.error('Error creating user:', errorData.error);
@@ -73,7 +81,7 @@ const Signin = () => {
               
              
             }}
-            onClick={handleSignup}
+            onClick={handleSignin}
           >
             Signin
           </button>
