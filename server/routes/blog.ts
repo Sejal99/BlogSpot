@@ -35,8 +35,11 @@ blogRouter.post('/', verifyJwt , upload.single('file'), async(req,res)=> {
             description: description,
             createdBy: userId,
         })
-        await data.save()
+        console.log('kkkkkk',data);
         
+        await data.save()
+       
+
     res.send('Blog successfully uploaded!')
         
     }catch(err){

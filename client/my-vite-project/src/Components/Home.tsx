@@ -40,27 +40,37 @@ const MyForm = () => {
     e.preventDefault();
   
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('file', formData.file);
-  
-      const response = await fetch('http://localhost:8000/blog', {
-        method: 'POST',
-        body: formDataToSend,
+      const requestBody = JSON.stringify({
+        title: formData.title,
+        description: formData.description,
+        file: formData.file,
       });
+  
+      console.log('Request Body:', requestBody);
+  
+      const response = await fetch('http://localhost:8000/blog/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestBody,
+      });
+  
+      console.log('Server Response:', response);
   
       if (response.ok) {
         console.log('Blog successfully uploaded!');
         // Optionally, you can reset the form or perform other actions
       } else {
         const errorMessage = await response.text();
-        console.error(errorMessage);
+        console.error('Server Error:', errorMessage);
       }
     } catch (err) {
-      console.error(err);
+      console.error('Fetch Error:', err);
     }
   };
+  
   
   const styles = {
     container: {
