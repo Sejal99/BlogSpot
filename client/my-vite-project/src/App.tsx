@@ -5,6 +5,7 @@ import Signup from './Components/Signup';
 import Signin from './Components/Signin';
 import Navbar from './Components/Navbar';
 import Home from './Components/Home';
+import Blogs from './Components/Blogs';
 
 
 
@@ -16,6 +17,7 @@ const App: React.FC = () => {
      <Route path="/" element={<Signup />} />
      <Route path="/login" element={<Signin />} />
      <Route path="/home" element={<Home />} />
+     <Route path="/all" element={<Blogs />} />
      
 
      </Routes>

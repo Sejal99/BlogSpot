@@ -21,6 +21,18 @@ const storage = multer.diskStorage({
 
   const upload = multer({ storage: storage })
 
+
+
+blogRouter.get('/all' , async(req, res)=> {
+    try{
+        const data= await blog.find().populate('createdBy')
+      
+        res.json(data)
+    }catch(err){
+        res.status(403).json(err)
+    }
+})
+
 blogRouter.post('/', verifyJwt , upload.single('file'), async(req,res)=> {
  console.log(req.file);
  console.log(req.body.title);
@@ -40,13 +52,11 @@ blogRouter.post('/', verifyJwt , upload.single('file'), async(req,res)=> {
             description: description,
             createdBy: userId,
         })
-        console.log('kkkkkk',data);
-        res.json({ message: 'File uploaded successfully' });
-        
         await data.save()
+        console.log('kkkkkk',data);
        
-
-    res.send('Blog successfully uploaded!')
+       
+    res.json('Blog successfully uploaded!')
         
     }catch(err){
         res.json(err)

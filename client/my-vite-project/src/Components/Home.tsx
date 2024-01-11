@@ -1,75 +1,102 @@
 // File: MyForm.js
 
-import React, { useState } from 'react';
-
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 const MyForm = () => {
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    file: null,
-  });
+  const [file, setFile] = useState<File | null>(null);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [image, setImage]= useState<any>([])
+  const [error, setError]= useState('')
+  const navigate = useNavigate();
+ 
+  // useEffect(()=> {
+  
+  //   const fun = async()=> {
+  //     try{
+  //       const res= await fetch('http://localhost:3002/blog/all',{
+  //       method:"GET",
+  //       credentials:"include", //This is very important in the case when we want to send cookies with the request
+  //       headers:{
+  //         'Content-Type': 'application/json'
+  //       }
+  //     })
+  //     if(!res.ok){
+  //       throw new Error('Network Error!')
+  //     }
+  //     //console.log(Cookies.get('token'));
+  //     const data= await res.json()
+  //     //console.log(data);
+  //      setImage(data)
+  //     }catch(err){
+  //       console.log(err); 
+  //     }   
+  //   }
+  //   fun()
+  // },[])
 
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files !== null && e.target.files.length > 0) {
+      const selectedFile = e.target.files[0];
+      const allowedExtensions = ["png", "jpeg", "jpg", "svg","webp"];
+      const fileExtension = selectedFile.name.split('.').pop()?.toLowerCase();
+  
+      
+      if (fileExtension && allowedExtensions.includes(fileExtension)) {
+        setFile(selectedFile);
+        setError('')
+      } else {      
+        console.error("Invalid file type. Please select a .png, .jpg, or .svg file.");
+        setError("Invalid file type. Please select a .png, .jpg, .svg or webp file.")
+        // Optionally, you can reset the file input to clear the selection
+        e.target.value = '';
+      }
+    }
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-
-    if (selectedFile) {
-      // Check if the selected file type is allowed
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/svg+xml'];
-      if (allowedTypes.includes(selectedFile.type)) {
-        setFormData({
-          ...formData,
-          file: selectedFile,
-        });
-      } else {
-        alert('Please select a valid image file (jpg, png, or svg).');
-        // Optionally clear the file input
-        e.target.value = null;
-      }
+  
+    // Update the corresponding state variable based on the input name
+    if (name === 'title') {
+      setTitle(value);
+    } else if (name === 'description') {
+      setContent(value);
     }
   };
+  
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    try {
-      const requestBody = JSON.stringify({
-        title: formData.title,
-        description: formData.description,
-        file: formData.file,
-      });
-  
-      console.log('Request Body:', requestBody);
-  
-      const response = await fetch('http://localhost:8000/blog/', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: requestBody,
-      });
-  
-      console.log('Server Response:', response);
-  
-      if (response.ok) {
-        console.log('Blog successfully uploaded!');
-        // Optionally, you can reset the form or perform other actions
-      } else {
-        const errorMessage = await response.text();
-        console.error('Server Error:', errorMessage);
-      }
-    } catch (err) {
-      console.error('Fetch Error:', err);
+
+  const handleSubmit = async (e:FormEvent)=> {
+    e.preventDefault()
+    const formData= new FormData()
+    if(file){
+      formData.append('file', file)
     }
-  };
+    formData.append('title', title)
+    formData.append('description', content)
+
+    try{
+      const res= await fetch('http://localhost:8000/blog/', {
+        method:"POST",
+        credentials: "include",
+        body:formData
+      })
+
+      if(!res.ok){
+        throw new Error('Network problem while creating blog!');
+      }
+      const data= await res.json()
+      console.log(data);
+      
+      navigate('/all');
+      
+    }catch(err){
+      console.log(err);
+      
+    }  
+  }
+  
   
   
   const styles = {
@@ -127,7 +154,8 @@ const MyForm = () => {
 
   return (
     <div style={styles.container}>
-      <form style={styles.form} onSubmit={handleSubmit}>
+      <form style={styles.form}         onSubmit={handleSubmit}
+ >
         <label style={styles.label} htmlFor="title">
           Title:
         </label>
@@ -136,8 +164,9 @@ const MyForm = () => {
           type="text"
           id="title"
           name="title"
-          value={formData.title}
+          value={title}
           onChange={handleInputChange}
+  
         />
 
         <label style={styles.label} htmlFor="description">
@@ -147,8 +176,8 @@ const MyForm = () => {
           style={styles.textarea}
           id="description"
           name="description"
-          value={formData.description}
-          onChange={handleInputChange}
+          value={content}
+         onChange={handleInputChange}
         />
 
         <label style={styles.label} htmlFor="file">
@@ -163,7 +192,8 @@ const MyForm = () => {
           onChange={handleFileChange}
         />
 
-        <button style={styles.button} type="submit">
+        <button style={styles.button} type="submit"  
+        >
           Submit
         </button>
       </form>
