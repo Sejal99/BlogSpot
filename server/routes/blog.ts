@@ -3,8 +3,15 @@
 import express from 'express'
 import { verifyJwt } from '../middlewares/authentication'
 import multer from 'multer'
-import blog from '../models/blog'
+import { Request, Response } from 'express';
 import path from 'path'
+
+
+import blog from '../models/blog'
+
+interface CustomRequest extends Request {
+    user?: any; // Add the 'user' property to Request
+}
 const blogRouter= express.Router()
 
 const storage = multer.diskStorage({
@@ -21,7 +28,7 @@ const storage = multer.diskStorage({
 
   const upload = multer({ storage: storage })
 
-
+ 
 
 blogRouter.get('/all' , async(req, res)=> {
     try{
@@ -62,5 +69,25 @@ blogRouter.post('/', verifyJwt , upload.single('file'), async(req,res)=> {
         res.json(err)
     }
 })
+
+blogRouter.get("/:id", async (req: CustomRequest, res: Response) => {
+    try {
+        const Blog = await blog.findOne({ _id: req.params.id });
+        console.log('ddddddd',Blog);
+        
+
+        if (!Blog) {
+            return res.status(404).json({ error: 'Blog not found' });
+        }
+
+        return res.json({
+            user: req.user,
+            Blog,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 export default blogRouter
