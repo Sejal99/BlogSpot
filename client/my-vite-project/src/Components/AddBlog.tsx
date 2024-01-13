@@ -66,7 +66,7 @@ const MyForm = () => {
       const data= await res.json()
       console.log(data);
       
-      navigate('/all');
+      navigate('/home');
       
     }catch(err){
       console.log(err);

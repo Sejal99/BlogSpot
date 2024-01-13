@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { DeleteLogo } from '../Logo';
+
 interface BlogImage {
   _id: string;
   imageUrl: string;
@@ -12,13 +13,14 @@ const MyBlogs = () => {
   const [images, setImages] = useState<BlogImage[]>([]);
   
 
-  const { id: blogId } = useParams<{ id: string }>();
+
   
   
+  useEffect(() => {
     const fetchSingleBlog = async () => {
-      if (blogId) {
+    
         try {
-          const res = await fetch(`http://localhost:8000/Blogs/${blogId}`, {
+          const res = await fetch(`http://localhost:8000/blog/myBlogs`, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -32,15 +34,15 @@ const MyBlogs = () => {
 
           const data = await res.json();
           console.log('Fetched Single Blog:', data);
-
+          setImages(data.Blogs)
         } catch (err) {
           console.error('Fetch Single Blog Error:', err);
         }
       }
-    };
+   
 
-
-
+    fetchSingleBlog();
+  }, []);
 
   const styles = {
     container: {
@@ -48,17 +50,22 @@ const MyBlogs = () => {
       flexWrap: 'wrap',
       gap: '20px',
       justifyContent: 'center',
+    
+      
     },
     blogItem: {
       width: '250px',
+      height:'300px',
       border: '1px solid #ddd',
       borderRadius: '8px',
       padding: '10px',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+     marginTop:20
+     
     },
     image: {
-      maxWidth: '100%',
-      height: 'auto',
+      width: '100%',
+      height: '50%',
       borderRadius: '4px',
       marginBottom: '10px',
     },
@@ -75,14 +82,17 @@ const MyBlogs = () => {
 
   return (
     <div style={styles.container}>
-        <button onClick={()=>{
-    fetchSingleBlog();
-        }}>hii</button>
       {images.map((image, index) => (
         <div key={index} style={styles.blogItem}>
           <img src={`http://localhost:8000${image.imageUrl}`} alt={`Image ${index}`} style={styles.image} />
           <h3 style={styles.title}>{image.title}</h3>
           <p style={styles.description}>{image.description}</p>
+          <div style={{marginTop:40,  display: 'flex',justifyContent: 'space-between',}}>
+          <DeleteLogo/>
+          <button style={{ cursor: 'pointer',
+      padding: '5px 5px',
+      borderRadius: '5px',}}>View</button>
+          </div>
         </div>
       ))}
     </div>

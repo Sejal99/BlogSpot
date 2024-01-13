@@ -70,19 +70,19 @@ blogRouter.post('/', verifyJwt , upload.single('file'), async(req,res)=> {
     }
 })
 
-blogRouter.get("/:id", async (req: CustomRequest, res: Response) => {
+blogRouter.get("/myBlogs",verifyJwt, async (req,res) => {
     try {
-        const Blog = await blog.findOne({ _id: req.params.id });
-        console.log('ddddddd',Blog);
+       const Blogs=await blog.find({createdBy:req.headers["userId"]})
+        console.log('ddddddd',Blogs);
         
 
-        if (!Blog) {
+        if (!Blogs) {
             return res.status(404).json({ error: 'Blog not found' });
         }
 
         return res.json({
-            user: req.user,
-            Blog,
+       
+            Blogs
         });
     } catch (error) {
         console.error(error);
