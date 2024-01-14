@@ -90,4 +90,29 @@ blogRouter.get("/myBlogs",verifyJwt, async (req,res) => {
     }
 });
 
+blogRouter.delete('/delete/:blogId', verifyJwt, async (req,res)=> {
+    try{
+        const blogToDelete= await blog.findOneAndDelete({_id:req.params.blogId})    
+        console.log(blogToDelete);
+          
+        res.json(blogToDelete)
+        
+    }catch(err){
+        res.status(403).json(err)
+    }
+})
+
+blogRouter.get('/userBlog/:blogId', verifyJwt,async (req,res)=> {
+    try{
+        const userblog= await blog.findOne({_id:req.params.blogId}) //call it with any name in frontend just call it using useParams
+        console.log('llll',userblog);
+        
+        res.json(userblog)
+    }catch(err){
+        res.status(403).json(err)
+    }
+})
+
+
+
 export default blogRouter

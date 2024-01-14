@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DeleteLogo } from '../Logo';
+import { useNavigate ,useParams} from "react-router-dom";
 
 interface BlogImage {
   _id: string;
@@ -11,7 +12,10 @@ interface BlogImage {
 
 const MyBlogs = () => {
   const [images, setImages] = useState<BlogImage[]>([]);
-  
+  const navigate = useNavigate();
+
+const BlogId=useParams();
+console.log(BlogId);
 
 
   
@@ -43,6 +47,26 @@ const MyBlogs = () => {
 
     fetchSingleBlog();
   }, []);
+
+
+
+  const deleteBlog=async()=>{
+    try {
+      const res= await fetch(`http://localhost:8000/blog/delete/${BlogId.blogId}`,{
+        method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+    },
+  })
+  const data= await res.json();
+  console.log('mmmmmmmmmmmmmm',data);
+  
+    } catch (error) {
+      
+    }
+  }
+   
 
   const styles = {
     container: {
@@ -88,10 +112,16 @@ const MyBlogs = () => {
           <h3 style={styles.title}>{image.title}</h3>
           <p style={styles.description}>{image.description}</p>
           <div style={{marginTop:40,  display: 'flex',justifyContent: 'space-between',}}>
-          <DeleteLogo/>
+            <div onClick={()=>{
+              deleteBlog()
+            }}>
+          <DeleteLogo />
+          </div>
           <button style={{ cursor: 'pointer',
       padding: '5px 5px',
-      borderRadius: '5px',}}>View</button>
+      borderRadius: '5px',}} onClick={()=>{
+        navigate(`/userBlog/${image._id}`)
+      }}>View</button>
           </div>
         </div>
       ))}
