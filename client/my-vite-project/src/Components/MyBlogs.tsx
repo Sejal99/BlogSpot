@@ -104,8 +104,8 @@ const styles = {
     
   },
   blogItem: {
-    width: '250px',
-    height:'300px',
+    width: '355px',
+    height:'450px',
     border: '1px solid #ddd',
     borderRadius: '8px',
     padding: '10px',

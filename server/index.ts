@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import { verifyJwt } from './middlewares/authentication';
 import blogRouter from './routes/blog';
+import commentRouter from './routes/comment';
 
 
 connectDb()
@@ -29,6 +30,7 @@ app.use(express.static('public'))
 
 app.use('/user',userRouter)
 app.use('/blog',blogRouter)
+app.use('/comment',commentRouter)
 const port = 8000;
 
 
