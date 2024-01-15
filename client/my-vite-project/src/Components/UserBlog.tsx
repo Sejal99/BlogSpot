@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import { Edit } from '../Logo';
 
 const UserBlog = () => {
 
     const [userData, setUserData] = useState({});
- 
+ const [edit,setEdit]=useState('')
 
   const BlogId=useParams();
   console.log(BlogId.blogId);
@@ -49,15 +50,15 @@ const UserBlog = () => {
       justifyContent: 'center',
     },
     blogItem: {
-      width: '250px',
+      width: '350px',
       border: '1px solid #ddd',
       borderRadius: '8px',
       padding: '10px',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
     },
     image: {
-      maxWidth: '100%',
-      height: 'auto',
+      width: '100%',
+    height: '50%',
       borderRadius: '4px',
       marginBottom: '10px',
     },
@@ -77,7 +78,12 @@ const UserBlog = () => {
           <img src={`http://localhost:8000${userData.imageUrl}`}  style={styles.image} />
           <h3 style={styles.title}>{userData.title}</h3>
           <p style={styles.description}>{userData.description}</p>
+          <div style={{display: 'flex', justifyContent: 'flex-end' ,marginTop:80}}>
+          <Edit/>
+          </div>
+          
         </div>
+    
   </div>
   )
 }

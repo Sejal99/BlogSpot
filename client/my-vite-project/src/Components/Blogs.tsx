@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import { useNavigate } from "react-router-dom";
 interface BlogImage {
   _id: string;
   imageUrl: string;
@@ -10,6 +10,8 @@ interface BlogImage {
 
 const Blogs = () => {
   const [images, setImages] = useState<BlogImage[]>([]);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,7 +79,13 @@ const Blogs = () => {
           <img src={`http://localhost:8000${image.imageUrl}`} alt={`Image ${index}`} style={styles.image} />
           <h3 style={styles.title}>{image.title}</h3>
           <p style={styles.description}>{image.description}</p>
+          <button style={{ cursor: 'pointer',
+      padding: '5px 5px',
+      borderRadius: '5px',}} onClick={()=>{
+        navigate(`/userBlog/${image._id}`)
+      }}>View</button>
         </div>
+        
       ))}
     </div>
   );

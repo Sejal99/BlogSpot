@@ -35,16 +35,17 @@ const Signup = () => {
   };
 
   return (
-    <div>
+    <div style={{ backgroundColor: 'red', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    
       <div
         style={{
-          paddingTop: '150px',
+          paddingTop: '60px',
           marginBottom: '10px',
           textAlign: 'center',
           fontSize:35
         }}
       >
-        <h6>Welcome to SnipIt. Sign up below</h6>
+        <h6>Welcome to Blogify. Sign up below</h6>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div style={{ width: '400px', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' }}>

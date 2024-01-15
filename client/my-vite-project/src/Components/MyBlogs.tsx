@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DeleteLogo } from '../Logo';
-import { useNavigate ,useParams} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface BlogImage {
   _id: string;
