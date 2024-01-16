@@ -5,7 +5,7 @@ import { verifyJwt } from "../middlewares/authentication";
 import blog from "../models/blog";
 
 const commentRouter = express.Router();
-// add comment
+
 
 commentRouter.post('/:blogId', verifyJwt, async(req,res)=> {
     try{
