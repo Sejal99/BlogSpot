@@ -7,6 +7,7 @@ import blog from "../models/blog";
 const commentRouter = express.Router();
 
 
+
 commentRouter.post('/:blogId', verifyJwt, async(req,res)=> {
     try{
      const {comments} = req.body
