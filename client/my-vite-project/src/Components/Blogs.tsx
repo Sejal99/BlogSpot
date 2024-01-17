@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 interface BlogImage {
   _id: string;
   imageUrl: string;
@@ -11,8 +11,10 @@ interface BlogImage {
 const Blogs = () => {
   const [images, setImages] = useState<BlogImage[]>([]);
   const navigate = useNavigate();
+  const [comments, setComments] = useState([]);
+  const BlogId=useParams();
 
-
+  console.log('bbbbb',BlogId.blogId);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,6 +42,34 @@ const Blogs = () => {
     fetchData();
 
   }, []);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const res = await fetch(`http://localhost:8000/comment/${BlogId.blogId}`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!res.ok) {
+          throw new Error('Network Error!');
+        }
+  
+        const data = await res.json(); // Extract data from the response
+  
+        setComments(data); // Set the comments state with the fetched data
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+        // Handle error on the frontend as needed
+      }
+    };
+  
+    fetchComments();
+  }, []);
+  
 
   const styles = {
     container: {
