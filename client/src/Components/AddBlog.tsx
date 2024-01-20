@@ -87,7 +87,7 @@ const MyForm = () => {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      background: '#f9f9f9',
+      background: '#F2C0FD',
       boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
     },
     form: {

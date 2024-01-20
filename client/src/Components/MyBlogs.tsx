@@ -72,7 +72,9 @@ setToggle(true)
   }
   
   return (
+    
     <div style={styles.container}>
+   
       {images.map((image, index) => (
         <div key={index} style={styles.blogItem}>
           <img src={`http://localhost:8000${image.imageUrl}`} alt={`Image ${index}`} style={styles.image} />

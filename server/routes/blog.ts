@@ -33,6 +33,7 @@ const storage = multer.diskStorage({
 blogRouter.get('/all' , async(req, res)=> {
     try{
         const data= await blog.find().populate('createdBy')
+      console.log('fffff',data);
       
         res.json(data)
     }catch(err){

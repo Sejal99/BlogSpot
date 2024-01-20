@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
+import backgroundImage from '../assets/blue.jpg';
 interface BlogImage {
   _id: string;
   imageUrl: string;
@@ -25,6 +26,7 @@ const Blogs = () => {
             'Content-Type': 'application/json',
           },
         });
+console.log('ppppppp',res);
 
         if (!res.ok) {
           throw new Error('Network Error!');
@@ -77,17 +79,21 @@ const Blogs = () => {
       flexWrap: 'wrap',
       gap: '20px',
       justifyContent: 'center',
+
+     
     },
     blogItem: {
-      width: '250px',
+      width: '350px',
       border: '1px solid #ddd',
       borderRadius: '8px',
       padding: '10px',
       boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+      background:'#F8DFF6',
+      marginTop:'10px'
     },
     image: {
-      maxWidth: '100%',
-      height: 'auto',
+      width: '100%',
+      height: '40%',
       borderRadius: '4px',
       marginBottom: '10px',
     },
@@ -100,23 +106,46 @@ const Blogs = () => {
       fontSize: '14px',
       color: '#555',
     },
+    title1:{
+      fontSize: '18px',
+      marginBottom: '8px',
+      color: '#333',
+    
+    }
   };
 
   return (
+    <div style={{ backgroundImage: `url(${backgroundImage})`,
+    backgroundSize: 'cover', height:'100vh',
+  }}>
     <div style={styles.container}>
       {images.map((image, index) => (
         <div key={index} style={styles.blogItem}>
           <img src={`http://localhost:8000${image.imageUrl}`} alt={`Image ${index}`} style={styles.image} />
           <h3 style={styles.title}>{image.title}</h3>
           <p style={styles.description}>{image.description}</p>
-          <button style={{ cursor: 'pointer',
+        
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+  <button
+    style={{
+      cursor: 'pointer',
       padding: '5px 5px',
-      borderRadius: '5px',}} onClick={()=>{
-        navigate(`/userBlog/${image._id}`)
-      }}>View</button>
+      borderRadius: '5px',
+      marginBottom: '10px', // Add margin at the bottom if needed
+    }}
+    onClick={() => {
+      navigate(`/userBlog/${image._id}`);
+    }}
+  >
+    View
+  </button>
+  <h3 style={styles.title}>CreatedBy: {image.createdBy.fullName}</h3>
+</div>
+
         </div>
         
       ))}
+    </div>
     </div>
   );
 };
