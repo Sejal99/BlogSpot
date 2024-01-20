@@ -46,7 +46,7 @@ const Home = () => {
     cursor: "pointer",
     padding: "10px 15px",
     borderRadius: 5,
-    fontSize: 14, }} onClick={() => navigate("/Signin")}>
+    fontSize: 14, }} onClick={() => navigate("/login")}>
             Signin
           </button>
         </div>
