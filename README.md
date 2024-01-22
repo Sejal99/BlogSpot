@@ -20,6 +20,7 @@ User Authentication:
 
 Implements a secure authentication system to ensure that only authorized users can create, edit, and delete blog posts.
 
+
 STEP 1- Signup/Signin
 
 ![Screenshot (12)](https://github.com/Sejal99/blogging-site/assets/85271912/c82486e1-1006-40c5-958f-92c0cf9e3947)
