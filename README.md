@@ -16,6 +16,7 @@ Multer for File Uploads:
 
 Multer is integrated to handle file uploads, allowing users to include images or other media in their blog posts.
 
+
 User Authentication: 
 
 Implements a secure authentication system to ensure that only authorized users can create, edit, and delete blog posts.
