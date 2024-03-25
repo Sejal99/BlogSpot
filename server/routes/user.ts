@@ -1,62 +1,68 @@
 import express from 'express'
-
-//const router=Router();
 import user from '../models/user'
-
+import { verifyJwt } from '../middlewares/veriftJwt'
+import { getObjectUrl, putObject } from '../services/aws-client'
 
 const userRouter= express.Router()
 
-userRouter.post('/signup' , async (req, res)=> {
-    console.log('jjjjj',req.body);
-    
+
+userRouter.post('/', async (req,res)=> {
     try{
-        const {fullName, email, password, role} = req.body
-        const ExistingUser=await user.findOne({fullName,email});
-        
-        if(ExistingUser) {
-            console.log('kkkkkkkkkkkkkkkkkkkkkooooooooooooooooooo');
-            
-            return res.json('user already exists')
-            
+        const {fullName, email, password, filename, contentType } = req.body
+        const img = `https://s3.ap-south-1.amazonaws.com/blog.dikshak/uploads/profile-pic/image-${filename}`
+        const  userDetails = await user.create({
+            fullName, email, password, imageUrl:img
+        });
+       userDetails.save()
+        res.json('user saved successfully!')  
+    }catch(err){
+        res.json(err);
+    }
+} )
+
+userRouter.post('/signin', async (req, res)=> {
+    try{   
+        const {email, password} = req.body
+        const isValidUser = await user.findOne({email})
+        if(!isValidUser){
+            return res.status(403).json('Such user does not exists!')
         }
-        const data= await user.create({
-            fullName , email, password, role
-        })
-   console.log('kkkkkkk',data);
-   
-        res.json('User created successfully!')
+        const token = await user.matchPasswordAndGiveToken(isValidUser._id, email ,isValidUser.role, password)
+        if(!token){
+            throw new Error('Invalid user')
+        }
+        
+         res.json(token)
     }catch(err){
         res.status(403).json(err)
     }
 })
 
-userRouter.post('/signin', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const token = await user.matchPassword(email, password);
-console.log('ppppppp',token);
-
-        if (!token) {
-            throw new Error('User not found or password does not match');
-        }
-
-        // Send the JSON response
-        res.cookie('token', token);
-        res.status(200).json({ message: 'User signed in' });
-
-      
+userRouter.post('/picture' , async (req,res)=> {
+    try{
+        const {filename, contentType}= req.body;
+        const url= await putObject(`image-${filename}`, contentType);
+        res.json(url)
         
-          
-          
         
-
-    } catch (error) {
-  console.log(error);
-  
+    }catch(err){
+        res.json(err)
     }
-});
+} )
 
-   
+userRouter.get('/:id', verifyJwt, async(req,res)=> {
+    try{    
+        const getUser = await user.findById(req.params.id)
+        if(getUser){
+            return res.json(req.headers['userId'])
+        }
+        return res.status(402).json("Such user with userId does not exists!")
+    }catch(err){
+        res.status(404).json(err)
+    }
+})
+
 
 
 export default userRouter
+

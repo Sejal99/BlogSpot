@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const blogSchema= new mongoose.Schema({
+const blogSchema= new mongoose.Schema({ //added
     imageUrl:{
         type:String,
         required:false
@@ -19,6 +19,7 @@ const blogSchema= new mongoose.Schema({
        required:true 
     }
 },{timestamps:true})
+
 
 const blog= mongoose.model('blog',blogSchema)
 export default blog

@@ -1,43 +1,36 @@
-
-import express from 'express';
-import mongoose from 'mongoose';
-import connectDb from './connection/connect';
+import express from 'express'
+import dotenv from 'dotenv'
 import userRouter from './routes/user'
-import cookieParser from 'cookie-parser';
+
+import blogRouter from './routes/blog'
 import cors from 'cors'
-import { verifyJwt } from './middlewares/authentication';
-import blogRouter from './routes/blog';
-import commentRouter from './routes/comment';
+import commentRouter from './routes/comment'
+import { mongooseConnect } from './connection/connect'
+dotenv.config()
 
 
-connectDb()
-const app = express();
+const app= express()
+mongooseConnect()
+// app.use(cors({
+//     origin: 'https://dikshak-blogging.vercel.app', 
+//     credentials:true
+//   })); 
 
-
-// Define a simple route
-// app.get('/', (req, res) => {
-//   res.send('Hello, this is your backend!');
-// });
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'http://localhost:3000', 
   credentials:true
-}));
-
+})); 
+  
 app.use(express.json())
-app.use(cookieParser());
-// app.use(verifyJwt("token"));
-app.use(express.static('public')) 
-
 app.use('/user',userRouter)
 app.use('/blog',blogRouter)
-app.use('/comment',commentRouter)
-const port = 8000;
+app.use('/comment', commentRouter)
+app.use('/', (req,res)=> {
+  res.json({message:"Hello baby"})
+})
 
+app.listen(process.env.PORT , ()=> console.log(`Server listening on port ${process.env.PORT}`))
 
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
 
 
 

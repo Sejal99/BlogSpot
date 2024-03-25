@@ -1,8 +1,9 @@
 import mongoose, { Model,Document } from "mongoose";
 import { createHmac , randomBytes } from "crypto";
-import {createToken} from '../services/auth';
+import { generateToken } from "../services/auth";
 
-interface User extends Document{ 
+interface IUser extends Document{ //We are extending to  Document type bcz n Mongoose, the isModified function is used to check if a particular field in a document has been modified. This function is available on individual documents (instances of a Mongoose model) and is used to determine whether a field has been changed since the document was loaded or saved
+    imageUrl:string,
     fullName: string;
     email:string;
     password:string;
@@ -10,11 +11,16 @@ interface User extends Document{
     salt:string;
 }
 
-interface UserModel extends Model<User> {
-    matchPassword( email:string,  password:string):Promise<User | null>
+interface UserModel extends Model<IUser> {
+    matchPasswordAndGiveToken(userId:string, email:string, role:string, password:string):Promise<IUser | null>
 }
 
-const userSchema= new mongoose.Schema<User,UserModel>({
+const userSchema= new mongoose.Schema<IUser,UserModel>({
+    imageUrl:{
+        type:String,
+        required:false,
+    
+    },
     fullName:{
         type:String,
         required:true,
@@ -32,8 +38,8 @@ const userSchema= new mongoose.Schema<User,UserModel>({
     },
     role:{
         type:String,
-        enum:['USER','ADMIN'],
-        default:'USER'
+        enum:['NORMAL','ADMIN'],
+        default:'NORMAL'
     
     },
     salt:{
@@ -44,44 +50,40 @@ const userSchema= new mongoose.Schema<User,UserModel>({
     
 },{timestamps:true})
 
-userSchema.pre<User>('save', function (next){
+const DEFAULT_IMAGE = '/profile.jpg';
+
+userSchema.pre<IUser>('save', function (next){
     const user= this;
-   console.log(user);
-    
     if(!user.isModified("password")) {return}
-    const secret= randomBytes(16).toString()
+    const secret= randomBytes(17).toString()
     const hashedPassword = createHmac('sha256', secret).update(user.password).digest('hex');
-   console.log(hashedPassword);
-   
-    
     this.salt = secret
     this.password = hashedPassword
-    console.log('nnnnnn',this);
+    if (!this.imageUrl || this.imageUrl.trim() === '') {
+        // Set default image
+        this.imageUrl = DEFAULT_IMAGE;
+      }
     next()
 })
 
 
-userSchema.static('matchPassword', async function( email , password){
+userSchema.static('matchPasswordAndGiveToken', async function(userId , email, role , password){
     const user= await this.findOne({email})
     if(!user){
         throw new Error('User not found')
     }
     const secret= user.salt
     const hashedPassword= user.password
-    
     const hashingPassword= createHmac('sha256', secret).update(password).digest('hex');
-    console.log(hashedPassword);
-    console.log(hashingPassword);
-    
-    
     if(hashedPassword !== hashingPassword){
         return null
     }
-    const token=createToken(user)
-    return token;
+
+    const token = generateToken(userId,email,role)
+    return token
 
 })
 
-const user= mongoose.model<User,UserModel>('user', userSchema)
+const user= mongoose.model<IUser,UserModel>('user', userSchema)
 
 export default user

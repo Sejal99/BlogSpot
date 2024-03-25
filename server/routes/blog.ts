@@ -1,121 +1,161 @@
-
-
 import express from 'express'
-import { verifyJwt } from '../middlewares/authentication'
-import multer from 'multer'
-import { Request, Response } from 'express';
-import path from 'path'
-
-
+import { verifyJwt } from '../middlewares/veriftJwt'
 import blog from '../models/blog'
-
-interface CustomRequest extends Request {
-    user?: any; // Add the 'user' property to Request
-}
+import { putObject } from '../services/aws-client'
 const blogRouter= express.Router()
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-    //console.log(req.headers['userId']);
-      cb(null, path.resolve('./public/uploads/'))
-    },
-    filename: function (req, file, cb) {
-     
-        const fileName= `${Date.now()}-${file.originalname}`
-      cb(null, fileName) 
-    }
-  })
 
-  const upload = multer({ storage: storage })
 
- 
-
-blogRouter.get('/all' , async(req, res)=> {
+blogRouter.get('/blogs', verifyJwt,async(req,res)=> {
     try{
-        const data= await blog.find().populate('createdBy')
-      console.log('fffff',data);
-      
-        res.json(data)
+        const limit= req.query.limit
+        const page= req.query.page 
+        const searchText= req.query.search || ""        
+        
+        if(!req.query.sort){
+            req.query.sort = 'title'
+        }
+        
+        let sort= req.query.sort || 'title'
+       
+        
+        if(!limit || !page ){
+            return
+        }
+         const limitNumber= +limit || 5 
+         const pageNumber= +page-1 || 0
+         let skipDocuments= pageNumber*limitNumber
+            //console.log("skip", skipDocuments);
+            
+         if(typeof req.query.sort === 'string'){
+             sort= req.query.sort.split(",")
+         }
+
+         let sortBy:any= {}
+         
+         if(sort[1]){
+            
+            sortBy[sort[0]]= sort[1]
+         }else{
+            
+            sortBy[sort[0]]= "asc"
+         }
+         //console.log(sortBy); //{ title: 'asc' } or {title: 'desc'}
+         let content:any=[]
+         if(searchText != ""){
+            skipDocuments=0;
+             content= await blog.find({title:{$regex:searchText , $options:"i"}}).skip(skipDocuments).limit(limitNumber).collation({ locale: 'en', strength: 2 }).sort(sortBy).populate('createdBy')
+             
+
+         }else{
+            content= await blog.find({title:{$regex:searchText , $options:"i"}}).skip(skipDocuments).limit(limitNumber).collation({ locale: 'en', strength: 2 }).sort(sortBy).populate('createdBy')
+         }
+         //console.log(content); 
+         const docsCount= await blog.countDocuments({
+            title: {$regex:searchText , $options:'i'}
+         })  
+         //console.log(docsCount);
+         
+         res.json({
+            content,
+            docsCount,
+            limit:limitNumber
+         })
     }catch(err){
         res.status(403).json(err)
     }
 })
 
-blogRouter.post('/', verifyJwt , upload.single('file'), async(req,res)=> {
- console.log(req.file);
- console.log(req.body.title);
- 
- 
- 
+blogRouter.post('/', verifyJwt ,  async(req,res)=> {
     try{
-        const {title , description}= req.body
+        const {title , description, filename, contentType}= req.body
+        
          const userId= req.headers['userId']
-         console.log('uuuuuuuuu',userId);
-         
-         console.log('hhhhhhhhhh',req.file?.filename);
          
         const data = await blog.create({
-            imageUrl: `/uploads/${req.file?.filename}`,
+            imageUrl: `https://s3.ap-south-1.amazonaws.com/blog.dikshak/uploads/profile-pic/image-${filename}`,
             title: title,
             description: description,
             createdBy: userId,
         })
         await data.save()
-        console.log('kkkkkk',data);
-       
-       
+        
     res.json('Blog successfully uploaded!')
         
     }catch(err){
         res.json(err)
     }
-})
-
-blogRouter.get("/myBlogs",verifyJwt, async (req,res) => {
-    try {
-       const Blogs=await blog.find({createdBy:req.headers["userId"]})
-        console.log('ddddddd',Blogs);
-        
-
-        if (!Blogs) {
-            return res.status(404).json({ error: 'Blog not found' });
-        }
-
-        return res.json({
-       
-            Blogs
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Internal Server Error' });
-    }
 });
 
-blogRouter.delete('/delete/:blogId', verifyJwt, async (req,res)=> {
+
+
+blogRouter.post('/picture' , async (req,res)=> {
     try{
-        const blogToDelete= await blog.findOneAndDelete({_id:req.params.blogId})    
-        console.log(blogToDelete);
+        const {filename, contentType}= req.body;
+        const url= await putObject(`image-${filename}`, contentType);
+        res.json(url)   
+        
+    }catch(err){
+        res.json(err)
+    }
+} )
+
+
+blogRouter.put('/update/:blogId', verifyJwt, async (req,res)=> {
+    try{
+        const {title , description, filename, contentType}= req.body   
+        console.log(title, description, filename, contentType);
           
-        res.json(blogToDelete)
+        const UserId= req.headers['userId']
+        const img = `https://s3.ap-south-1.amazonaws.com/blog.dikshak/uploads/profile-pic/image-${filename}`;
+        console.log(img);
         
+
+             const updateBlog = await blog.findByIdAndUpdate(req.params.blogId ,{
+             title: title,
+             description: description,
+             createdBy: UserId,
+             imageUrl: img
+            } );
+            console.log(updateBlog);
+            
+            res.json('Blog updated successfully!')
     }catch(err){
-        res.status(403).json(err)
+        res.status(403).json
     }
 })
 
-blogRouter.get('/userBlog/:blogId', verifyJwt,async (req,res)=> {
+
+blogRouter.get('/userBlog', verifyJwt, async(req,res)=> {
     try{
-        const userblog= await blog.findOne({_id:req.params.blogId}) //call it with any name in frontend just call it using useParams
-        console.log('llll',userblog);
+        const userBlogs= await blog.find({createdBy:req.headers['userId']}).sort({updatedAt:"desc"})
+        res.json(userBlogs)
         
-        res.json(userblog)
+    }catch(err){
+        res.status(403).json(err)
+
+    }
+})
+
+blogRouter.get('/user/:blogId', async (req,res)=> {
+    try{
+        const userName= await blog.findOne({_id:req.params.blogId}).populate('createdBy')
+        res.json(userName)
     }catch(err){
         res.status(403).json(err)
     }
 })
 
 
-
+blogRouter.delete('/remove/:blogId', verifyJwt, async (req,res)=> {
+    try{
+        const blogToDelete= await blog.findOneAndDelete({_id:req.params.blogId})      
+        res.json('blog deleted successful!')
+        
+    }catch(err){
+        res.status(403).json(err)
+    }
+})
 
 
 export default blogRouter
