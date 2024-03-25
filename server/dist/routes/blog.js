@@ -60,8 +60,7 @@ blogRouter.get('/blogs', veriftJwt_1.verifyJwt, function (req, res) { return __a
                 if (!limit || !page) {
                     return [2 /*return*/];
                 }
-                limitNumber = +limit || 5 //converting string to number
-                ;
+                limitNumber = +limit || 5;
                 pageNumber = +page - 1 || 0;
                 skipDocuments = pageNumber * limitNumber;
                 //console.log("skip", skipDocuments);
@@ -69,13 +68,10 @@ blogRouter.get('/blogs', veriftJwt_1.verifyJwt, function (req, res) { return __a
                     sort = req.query.sort.split(",");
                 }
                 sortBy = {};
-                //@ts-ignore
                 if (sort[1]) {
-                    //@ts-ignore
                     sortBy[sort[0]] = sort[1];
                 }
                 else {
-                    //@ts-ignore
                     sortBy[sort[0]] = "asc";
                 }
                 content = [];

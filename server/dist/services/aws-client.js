@@ -44,7 +44,6 @@ var client_s3_1 = require("@aws-sdk/client-s3");
 var s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
 var dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-//@ts-ignore
 var s3Client = new client_s3_1.S3Client({
     region: "ap-south-1",
     credentials: {
@@ -52,7 +51,6 @@ var s3Client = new client_s3_1.S3Client({
         secretAccessKey: process.env.SECRET_ACCESS_KEY
     }
 });
-//@ts-ignore
 function getObjectUrl(key) {
     return __awaiter(this, void 0, void 0, function () {
         var command, url;
@@ -72,7 +70,6 @@ function getObjectUrl(key) {
     });
 }
 exports.getObjectUrl = getObjectUrl;
-//@ts-ignore
 function putObject(filename, contentType) {
     return __awaiter(this, void 0, void 0, function () {
         var command, url;
@@ -99,16 +96,10 @@ function init() {
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
-                    //@ts-ignore
-                    // console.log('Url for minions', await getObjectUrl(`uploads/profile-pic/image-${global.filename}`));
-                    //@ts-ignore
                     _b = (_a = console).log;
                     _c = ['Url for uploading'];
                     return [4 /*yield*/, putObject("image-".concat(global.filename), global.contentType)];
                 case 1:
-                    //@ts-ignore
-                    // console.log('Url for minions', await getObjectUrl(`uploads/profile-pic/image-${global.filename}`));
-                    //@ts-ignore
                     _b.apply(_a, _c.concat([_d.sent()]));
                     return [2 /*return*/];
             }
