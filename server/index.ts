@@ -11,15 +11,15 @@ dotenv.config()
 
 const app= express()
 mongooseConnect()
-// app.use(cors({
-//     origin: 'https://sejal-blogging.vercel.app', 
-//     credentials:true
-//   })); 
-
 app.use(cors({
-  origin: 'http://localhost:3000', 
-  credentials:true
-})); 
+    origin: 'https://sejal-blogging.vercel.app', 
+    credentials:true
+  })); 
+
+// app.use(cors({
+//   origin: 'http://localhost:3000', 
+//   credentials:true
+// })); 
   
 app.use(express.json())
 app.use('/user',userRouter)
