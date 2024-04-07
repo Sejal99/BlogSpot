@@ -43,7 +43,7 @@ export default function Home() {
     </p>
          
             </div>  
-            <div className=' text-white font-medium text-[1.3rem]'>A Blogging application for all dude and dudess who are willing to change the world by sharing what they got.</div>
+            <div className=' text-white font-medium text-[1.3rem]'>The Ultimate Platform for Everyone Ready to Revolutionize the World by Sharing Their Insights.</div>
             <div className='grid grid-cols-1 md:grid-cols-2 py-10 gap-3'>
               {data.map((value, index)=> (
                   <div className=' min-h-[30vh] p-10 bg-white flex justify-center items-center border-2 border-gray-400 rounded-xl flex-col max-w-lg' key={index}>

@@ -21,8 +21,8 @@ const Navbar = () => {
   },[])
 
   return (
-    <div className=' px-8 items-center bg-gradient-to-br from-yellow-300 to-yellow-500 justify-between flex gap-3 p-3 py-4 '>
-        <div onClick={()=> router.push('/')} className=' cursor-pointer text-[1.8rem] hover:text-white font-semibold '>Snif Blog</div>
+    <div className=' px-8 items-center bg-gradient-to-br from-pink-300 to-pink-500 justify-between flex gap-3 p-3 py-4 '>
+        <div onClick={()=> router.push('/')} className=' cursor-pointer text-[1.8rem] hover:text-white font-semibold '>Blogify</div>
         <div className=' items-center flex gap-5'>
           {!token ? (
             <div className=' flex gap-5'>
