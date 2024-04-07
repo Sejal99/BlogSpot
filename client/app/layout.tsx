@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description: 'Blog App',
 }
 
+//
 export default function RootLayout({
   children,
 }: {
