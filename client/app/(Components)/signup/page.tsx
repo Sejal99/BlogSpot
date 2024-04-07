@@ -70,6 +70,7 @@ const Page = () => {
   }
 
   const handleImageClick = () => {
+    //@ts-ignore
     inputRef.current.click()
   }
 
@@ -77,6 +78,7 @@ const Page = () => {
     try {
       const res = await fetch(`${base_url}/user/picture`, {
         method: "POST",
+        //@ts-ignore
         headers: {
           'Content-Type': "application/json",
           'authorization': localStorage.getItem('token'),
@@ -96,6 +98,7 @@ const Page = () => {
 
         const res2 = await fetch(s3PutUrl, {
           method: "PUT",
+          //@ts-ignore
           headers: {
             "Access-Control-Allow-Headers" : "Content-Type",
             "Access-Control-Allow-Origin": "*",
