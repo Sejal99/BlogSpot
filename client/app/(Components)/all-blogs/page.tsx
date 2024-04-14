@@ -54,7 +54,7 @@ const Page = () => {
       <Navbar />
 
       <div className=" flex flex-col items-center  h-[100%] ">
-         <input onChange={(e)=> setSearch(e.target.value)} className=" shadow-md m-4 mt-6 p-3 outline-none border-2 border-gray-200 text-gray-700 w-[30vw] rounded-lg" placeholder="Search Blog Title" type="text" />
+         {/* <input onChange={(e)=> setSearch(e.target.value)} className=" shadow-md m-4 mt-6 p-3 outline-none border-2 border-gray-200 text-gray-700 w-[30vw] rounded-lg" placeholder="Search Blog Title" type="text" /> */}
          <div>
     
       {(search!=""&& cardData.length === 0) ? "Page not found" : 
@@ -93,11 +93,11 @@ const Page = () => {
        }
        </div>
   </div>
-  
+{/*   
   <div className=" flex p-3 mt-10 justify-center">
   <Pagination totalDocuments={cardData.docsCount} limit={cardData.limit} page={page} setPage={setPage} />
   </div>
-  
+   */}
   </div>
     )
 }
