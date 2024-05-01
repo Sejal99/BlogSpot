@@ -19,7 +19,7 @@ const Page = () => {
       const fun = async()=> {
    
         try{
-          const res= await fetch(`${base_url}/blog/blogs?page=${page}&limit=5&sort=createdAt&search=${search}`,{
+          const res= await fetch(`${base_url}/blog/blogs?page=${page}&limit=3&sort=createdAt&search=${search}`,{
           method:"GET",
           credentials:"include", //This is very important in the case when we want to send cookies with the request
           //@ts-ignore
@@ -50,7 +50,7 @@ const Page = () => {
   
     
     return (
-      <div className="  h-[100vh] flex flex-col">
+      <div className="  h-[100vh] flex flex-col ">
       <Navbar />
 
       <div className=" flex flex-col items-center  h-[100%] ">
