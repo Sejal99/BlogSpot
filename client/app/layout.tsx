@@ -21,7 +21,7 @@ export default function RootLayout({
       
     <ReduxProvider>
     <html lang='en'>
-    <body className=' bg-purple-300'>
+    <body className=' bg-indigo-400'>
     <div className='main' >
         <div  className='gradient' />
     </div>
