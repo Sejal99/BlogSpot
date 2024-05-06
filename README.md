@@ -1,25 +1,39 @@
-Overview:-
 
-This is a full-stack blog website built using React.js and TypeScript on the frontend, with Node.js and Express.js on the backend. The application also incorporates Multer for handling file uploads and includes user authentication for secure access.
+# Blogging Website
 
-Features:-
-
-React.js and TypeScript: 
-
-Utilizes the power of React for building a dynamic and responsive user interface, while TypeScript enhances code maintainability and catches potential errors during development.
-
-Node.js and Express.js: 
-
-The backend is built on Node.js with Express.js, providing a robust server architecture for handling API requests and database interactions.
-
-Multer for File Uploads:
-
-Multer is integrated to handle file uploads, allowing users to include images or other media in their blog posts.
+A webapplication built using Next.js, TypeScript, Tailwind CSS, Node.js, Express.js, MongoDB, and integrated with Amazon S3 for storage. The goal is to create a versatile blogging platform where registered creators can author and publish blogs publicly, while users can interact by commenting and sharing their thoughts on the content.
 
 
-User Authentication: 
+## Features
 
-Implements a secure authentication system to ensure that only authorized users can create, edit, and delete blog posts.
+- Pagination, Search and Sort implementation on server side for robust support
+- Authentication using JWT Tokens
+- Comprehensive CRUD Operations with Commenting Feature
+- Image Upload and Management 
 
 
+## Installation
+
+Install my-project with npm
+
+```bash
+  npm install my-project
+  cd my-project
+  npm run dev
+```
+    
+## Tech Stack
+
+**Client:** Next.js, Redux, TailwindCSS, Typescript, Javascript
+
+**Server:** Node, Express, Mongodb
+
+
+## Deployment
+
+To deploy this project go to VERCEL 
+
+```bash
+  npm run build
+```
 
