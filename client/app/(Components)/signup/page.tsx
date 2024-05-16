@@ -17,6 +17,8 @@ const Page = () => {
   const [error, setError] = useState('')
   const [disable, setDisable] = useState(false)
   const [message, setMessage] = useState('')
+  const [isMatched,setMatch]= useState(false);
+  const [isWarning,setWarning] =useState(false);
 
   const router = useRouter()
   const inputRef = useRef(null)
@@ -66,6 +68,22 @@ const Page = () => {
   
     } catch(err) {
       console.log(err)
+    }
+  }
+  const matchPassword=(e:ChangeEvent<HTMLInputElement>)=>{
+    if(e.target.value === password){
+      setMatch(true)
+      setWarning(false) 
+    }else{
+      setWarning(true)
+      setMatch(false)
+    }
+  }
+  const checkIfMatched=(e:FormEvent<HTMLFormElement>)=>{
+    if(isMatched){
+      handleSignup(e)
+    }else{
+      alert('Password Not Matching')
     }
   }
 
@@ -132,7 +150,7 @@ const Page = () => {
       <div className="mt-8 flex justify-center items-center">
         <div className="bg-white p-4 py-6 shadow-md rounded-md w-[22rem]">
           <h2 className="text-2xl font-bold mb-4">Registration</h2>
-          <form onSubmit={handleSignup}>
+          <form onSubmit={(e)=>{checkIfMatched(e)}}>
             <div className="mb-2">
               <div onClick={handleImageClick} className='flex items-center justify-center'>
                 {file ? 
@@ -189,6 +207,20 @@ const Page = () => {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
                 required
               />
+            </div>
+            <div className="mb-2">
+              <label htmlFor="confirm-password" className='block text-gray-600 text-sm font-medium mb-1'>Confirm Password</label>
+              <input
+               type="password"
+               id='reqpassword'
+               name='confirm password'
+               onChange={(e)=>{matchPassword(e)}}
+               className='w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500'
+               required
+              />
+            <div className='mb-2 mt-2'>
+              {isWarning && <div className="bg-red-200 rounded-md p-3">Password not matching</div>}
+            </div>
             </div>
             <button
               type="submit"
