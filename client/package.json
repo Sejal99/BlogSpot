@@ -12,10 +12,11 @@
     "@reduxjs/toolkit": "^2.0.1",
     "@types/js-cookie": "^3.0.6",
     "js-cookie": "^3.0.5",
-    "next": "^14.0.4",
+    "next": "^14.2.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.0.4",
+    "sharp": "^0.33.4",
     "sweetalert2": "^11.10.2"
   },
   "devDependencies": {
