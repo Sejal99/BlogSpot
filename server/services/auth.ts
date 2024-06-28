@@ -12,5 +12,5 @@ export const generateToken = (userId:string , email:string, role:string)=> {
     const token = jwt.sign(payload, process.env.SECRET_KEY, {expiresIn:'2h'})
     //console.log(token);
     
-    return token
+    return token;
 }
